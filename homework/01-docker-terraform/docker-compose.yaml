@@ -21,6 +21,22 @@ services:
       - "8080:80"
     volumes:
       - vol-pgadmin_data:/var/lib/pgadmin
+  
+  ingest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ny_taxi
+      TRIP_TABLE: green_taxi_data
+      CHUNKSIZE: 100000
+    restart: "no"
 
 volumes:
   vol-pgdata:

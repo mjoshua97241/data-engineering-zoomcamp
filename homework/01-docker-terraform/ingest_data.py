@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import pandas as pd
+import os
 import click
+import pandas as pd
+import pyarrow.parquet as pq
+import pyarrow.dataset as ds
+import urllib.request
 from sqlalchemy import create_engine
 from tqdm.auto import tqdm
 
 
+# -----------------------------
+# Dtype and parse_dates
+# -----------------------------
 dtype = {
     "VendorID": "Int64",
     "passenger_count": "Int64",
@@ -31,56 +38,118 @@ parse_dates = [
     "tpep_dropoff_datetime"
 ]
 
+# -----------------------------
+# Click command
+# -----------------------------
 @click.command()
-@click.option('--user', default='root', help='PostgreSQL user')
-@click.option('--password', default='root', help='PostgreSQL password')
-@click.option('--host', default='localhost', help='PostgreSQL host')
-@click.option('--port', default=5432, type=int, help='PostgreSQL port')
-@click.option('--db', default='ny_taxi', help='PostgreSQL database name')
-@click.option('--table', default='yellow_taxi_data', help='Target table name')
-@click.option('--year', default=2021, help='Year')
-@click.option('--month', default=1, help='Month of the year')
-@click.option('--chunksize', default=100000, help='Size of the chunk')
-
-def run(user, password, host, port, db, table, year, month, chunksize):
-    prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
-    url = f'{prefix}/yellow_tripdata_{year}-{month:02d}.csv.gz'
-    zone_data = 'data/taxi_zone_lookup.csv'
-
-    engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
-    df_zones = pd.read_csv(zone_data)
-    df_zones.to_sql(name='zones', con=engine, if_exists='replace')
-
-    df_iter = pd.read_csv(
-        url,
-        dtype=dtype,
-        parse_dates=parse_dates,
-        iterator=True,
-        chunksize=chunksize,
-    )
-
-    first = True
-    for df_chunk in tqdm(df_iter):
-        if first:
-            df_chunk.head(0).to_sql(
-                name=table,
-                con=engine,
-                if_exists='replace'
-            )
-            first = False
-            print("Table created")
-
-        df_chunk.to_sql(
-            name=table,
-            con=engine,
-            if_exists='append'
-        )
+@click.option(
+    "--user",
+    default=lambda: os.getenv("POSTGRES_USER", "postgres"),
+    help="PostgreSQL user"
+)
+@click.option(
+    "--password",
+    default=lambda: os.getenv("POSTGRES_PASSWORD", "postgres"),
+    help="PostgreSQL password"
+)
+@click.option(
+    "--host",
+    default=lambda: os.getenv("POSTGRES_HOST", "db"),
+    help="PostgreSQL host"
+)
+@click.option(
+    "--port",
+    default=lambda: int(os.getenv("POSTGRES_PORT", 5432)),
+    type=int,
+    help="PostgreSQL port"
+)
+@click.option(
+    "--db",
+    default=lambda: os.getenv("POSTGRES_DB", "ny_taxi"),
+    help="PostgreSQL database name"
+)
+@click.option(
+    "--table",
+    default=lambda: os.getenv("TRIP_TABLE", "green_taxi_data"),
+    help="Target table name"
+)
+@click.option(
+    "--chunksize",
+    default=lambda: int(os.getenv("CHUNKSIZE", 100_000)),
+    type=int,
+    help="Number of rows per chunk"
+)
+def run(user, password, host, port, db, table, chunksize):
+    data_dir = "./data"
+    os.makedirs(data_dir, exist_ok=True)
+    
+    # -----------------------------
+    # URLs
+    # -----------------------------
+    trip_data = f"{data_dir}/green_tripdata_2025-11.parquet"
+    zone_data = f"{data_dir}/taxi_zone_lookup.csv"
+    
+    # -----------------------------
+    # Download data if not exists
+    # -----------------------------
+    trip_url = "https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2025-11.parquet"
+    if not os.path.exists(trip_data):
+        print(f"Downloading trip data from {trip_url}...")
+        urllib.request.urlretrieve(trip_url, trip_data)
+    else:
+        print(f"Trip data file already exists at {trip_data}")
         
-        print("Inserted:", len(df_chunk))
+    zone_url = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv"
+    if not os.path.exists(zone_data):
+        print(f"Downloading taxi zone lookup from {zone_url}...")
+        urllib.request.urlretrieve(zone_url, zone_data)
+    else:
+        print(f"Taxi zone lookup file already exists at {zone_data}")
+    
 
-if __name__ == '__main__':
+    # -----------------------------
+    # Database engine
+    # -----------------------------
+    engine = create_engine(f"postgresql://{user}:{password}@{host}:{port}/{db}")
+
+    # -----------------------------
+    # Load trip data in chunks
+    # -----------------------------
+    print(f"Loading trip data from {trip_data} in chunks of {chunksize} rows ...")
+
+    # Use pyarrow.dataset to stream parquet in row groups
+    dataset = ds.dataset(trip_data, format="parquet")
+    first = True
+    row_group_counter = 0
+
+    for batch in tqdm(dataset.to_batches(batch_size=chunksize), desc="Processing batches"):
+        df_chunk = batch.to_pandas()
+        if first:
+            # Create table schema
+            df_chunk.head(0).to_sql(name=table, con=engine, if_exists="replace", index=False)
+            first = False
+            print(f"Table '{table}' created")
+
+        # Insert chunk
+        df_chunk.to_sql(name=table, con=engine, if_exists="append", index=False)
+        row_group_counter += len(df_chunk)
+        print(f"Inserted {len(df_chunk)} rows, total so far: {row_group_counter}")
+
+    print(f"Trip data ingestion completed: {row_group_counter} rows total")
+
+    # -----------------------------
+    # Load taxi zone lookup
+    # -----------------------------
+    print(f"Loading taxi zone lookup from {zone_data} ...")
+    df_zones = pd.read_csv(zone_data)
+    df_zones.to_sql(name="taxi_zone_lookup", con=engine, if_exists="replace", index=False)
+    print(f"Taxi zone lookup loaded ({len(df_zones)} rows)")
+
+    print("✅ All ingestion complete")
+
+
+# -----------------------------
+# Entry point
+# -----------------------------
+if __name__ == "__main__":
     run()
-
-
-
-

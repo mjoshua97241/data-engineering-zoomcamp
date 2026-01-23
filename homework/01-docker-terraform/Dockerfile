@@ -1,12 +1,12 @@
-FROM python:3.13.11
-
+FROM python:3.13.11-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/
 
-WORKDIR /app
+WORKDIR /code
+ENV PATH="/code/.venv/bin:$PATH"
 
-ENV PATH="/app/.venv/bin:$PATH"
-
-COPY "pyproject.toml" "uv.lock" ".python-version" ./
+COPY pyproject.toml .python-version uv.lock ./
 RUN uv sync --locked
 
-ENTRYPOINT[bash]
+COPY ingest_data.py .
+
+ENTRYPOINT ["uv", "run", "python", "ingest_data.py"]
