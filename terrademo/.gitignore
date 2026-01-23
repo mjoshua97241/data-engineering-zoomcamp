@@ -1,0 +1,30 @@
+# Terraform State and Backups
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform .tfvars files
+# Ignore variable files that contain secrets or are auto-generated.
+# Most .tfvars files are configuration and should be managed in version control.
+# If you have specific secret files, list them here.
+# Example: secret.tfvars
+
+# Terraform internal files
+.terraform/
+.terraform.lock.hcl # This file tracks provider versions; consider committing it for team consistency
+*.tfplan
+.terraformrc
+terraform.rc
+
+# Crash log files
+crash.log
+
+# Override files
+# These files are used for development and testing, and typically should not be committed.
+# Remove the # to ignore them.
+# override.tf
+# override.tf.json
+# *_override.tf
+# *_override.tf.json
+
+# All json files
+*.json
