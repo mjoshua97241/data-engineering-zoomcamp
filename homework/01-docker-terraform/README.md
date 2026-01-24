@@ -19,7 +19,7 @@ pip 25.3
 
 **Answer**: `25.3`
 
-[Screenshot for question 1](screenshots/no_1.png)
+![Screenshot for question 1](screenshots/no_1.png)
 
 ---
 
@@ -37,7 +37,7 @@ For the trips in November 2025 (lpep_pickup_datetime between '2025-11-01' and '2
 
 **Answer**: `8,007`
 
-[Screenshot for question 3](screenshots/no_3.png)
+![Screenshot for question 3](screenshots/no_3.png)
 
 ## Question 4. Longest trip for each day
 
@@ -47,7 +47,7 @@ Use the pick up time for your calculations.
 
 **Answer**: `2025-11-14`
 
-[Screenshot for question 4](screenshots/no_4.png)
+![Screenshot for question 4](screenshots/no_4.png)
 
 ## Question 5. Biggest pickup zone
 
@@ -55,7 +55,7 @@ Which was the pickup zone with the largest total_amount (sum of all trips) on No
 
 **Answer**: `East Harlem North`
 
-[Screenshot for question 5](screenshots/no_5.png)
+![Screenshot for question 5](screenshots/no_5.png)
 
 ## Question 6. Largest tip
 
@@ -65,7 +65,7 @@ Note: it's `tip` , not `trip`. We need the name of the zone, not the ID.
 
 **Answer**: `Yorkville West`
 
-[Screenshot for question 6](screenshots/no_6.png)
+![Screenshot for question 6](screenshots/no_6.png)
 
 ## Terraform Exercise
 
