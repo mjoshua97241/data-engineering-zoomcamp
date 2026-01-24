@@ -63,6 +63,11 @@ Note: it's `tip` , not `trip`. We need the name of the zone, not the ID.
 **Answer**: `Yorkville West`
 [Screenshot for question 6](screenshots/no_6.png)
 
+## Terraform Exercise
+
+[`main.tf`](homework/01-docker-terraform/terraform/main.tf)
+[`variable.tf`](homework/01-docker-terraform/terraform/variable.tf)
+
 ## Question 7. Terraform Workflow
 
 Which of the following sequences, respectively, describes the workflow for:
