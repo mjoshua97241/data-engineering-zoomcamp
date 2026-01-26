@@ -69,8 +69,8 @@ Note: it's `tip` , not `trip`. We need the name of the zone, not the ID.
 
 ## Terraform Exercise
 
-[`main.tf`](homework/01-docker-terraform/terraform/main.tf)
-[`variable.tf`](homework/01-docker-terraform/terraform/variable.tf)
+[`main.tf`](https://github.com/mjoshua97241/data-engineering-zoomcamp/blob/main/homework/01-docker-terraform/terraform/main.tf)
+[`variable.tf`](https://github.com/mjoshua97241/data-engineering-zoomcamp/blob/main/homework/01-docker-terraform/terraform/variable.tf)
 
 ## Question 7. Terraform Workflow
 
