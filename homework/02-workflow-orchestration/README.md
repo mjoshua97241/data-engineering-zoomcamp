@@ -36,11 +36,11 @@ How many rows are there for the `Green` Taxi data for all CSV files in the year 
 
 ![Screenshot for question 4](screenshots/no_4.png)
 
-## Question 5. Biggest pickup zone
+## Question 5
 
-Which was the pickup zone with the largest total_amount (sum of all trips) on November 18th, 2025?
+How many rows are there for the Yellow Taxi data for the March 2021 CSV file?
 
-**Answer**: `East Harlem North`
+**Answer**: `1,925,152`
 
 ![Screenshot for question 5](screenshots/no_5.png)
 
