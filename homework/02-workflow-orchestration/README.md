@@ -1,4 +1,4 @@
-# Module 1 Homework: Workflow Orchestration
+# Module 2 Homework: Workflow Orchestration
 
 This repository contains my solution for **Module 1 - Workflow Orchestration**.
 
