@@ -20,21 +20,19 @@ What is the rendered value of the variable file when the inputs taxi is set to g
 
 **Answer:** `green_tripdata_2020-04.csv`
 
-## Question 3: Counting short trips
+## Question 3:
 
-For the trips in November 2025 (lpep_pickup_datetime between '2025-11-01' and '2025-12-01', exclusive of the upper bound), how many trips had a trip_distance of less than or equal to 1 mile?
+How many rows are there for the `Yellow` Taxi data for all CSV files in the year 2020?
 
-**Answer**: `8,007`
+**Answer**: `24,648,499`
 
 ![Screenshot for question 3](screenshots/no_3.png)
 
-## Question 4. Longest trip for each day
+## Question 4
 
-Which was the pick up day with the longest trip distance? Only consider trips with trip_distance less than 100 miles (to exclude data errors).
+How many rows are there for the `Green` Taxi data for all CSV files in the year 2020?
 
-Use the pick up time for your calculations.
-
-**Answer**: `2025-11-14`
+**Answer**: `1,734,051`
 
 ![Screenshot for question 4](screenshots/no_4.png)
 
