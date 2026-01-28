@@ -44,27 +44,8 @@ How many rows are there for the Yellow Taxi data for the March 2021 CSV file?
 
 ![Screenshot for question 5](screenshots/no_5.png)
 
-## Question 6. Largest tip
+## Question 6
 
-For the passengers picked up in the zone named "East Harlem North" in November 2025, which was the drop off zone that had the largest tip?
+How would you configure the timezone to New York in a Schedule trigger?
 
-Note: it's `tip` , not `trip`. We need the name of the zone, not the ID.
-
-**Answer**: `Yorkville West`
-
-![Screenshot for question 6](screenshots/no_6.png)
-
-## Terraform Exercise
-
-[`main.tf`](https://github.com/mjoshua97241/data-engineering-zoomcamp/blob/main/homework/01-docker-terraform/terraform/main.tf)
-[`variable.tf`](https://github.com/mjoshua97241/data-engineering-zoomcamp/blob/main/homework/01-docker-terraform/terraform/variable.tf)
-
-## Question 7. Terraform Workflow
-
-Which of the following sequences, respectively, describes the workflow for:
-
-    1. Downloading the provider plugins and setting up backend,
-    2. Generating proposed changes and auto-executing the plan
-    3. Remove all resources managed by terraform`
-
-**Answer**: `terraform init, terraform apply -auto-approve, terraform destroy`
+**Answer**: **Add a `timezone` property set to `America/New_York` in the `Schedule` trigger configuration**
