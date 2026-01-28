@@ -18,7 +18,7 @@ Within the execution for `Yellow` Taxi data for the year `2020` and month `12`: 
 
 What is the rendered value of the variable file when the inputs taxi is set to green, year is set to 2020, and month is set to 04 during execution?
 
-**Answer:** `db:5432`
+**Answer:** `green_tripdata_2020-04.csv`
 
 ## Question 3: Counting short trips
 
