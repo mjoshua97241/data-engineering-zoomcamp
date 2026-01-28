@@ -1,33 +1,22 @@
-# Module 1 Homework: Docker & SQL
+# Module 1 Homework: Workflow Orchestration
 
-This repository contains my solution for **Module 1 - Docker & SQL**.
+This repository contains my solution for **Module 1 - Workflow Orchestration**.
 
 ---
 
-## Question 1: Understanding Docker images
+## Question 1
 
-**Task:**  
-Run Docker with the `python:3.13` image, use `bash` as the entrypoint, and check the version of `pip`.
+Within the execution for `Yellow` Taxi data for the year `2020` and month `12`: what is the uncompressed file size (i.e. the output file `yellow_tripdata_2020-12.csv` of the `extract` task)?
 
-### Commands used
-
-```bash
-docker run -it --entrypoint bash python:3.13
-pip --version
-pip 25.3
-```
-
-**Answer**: `25.3`
+**Answer**: `134.5 MiB`
 
 ![Screenshot for question 1](screenshots/no_1.png)
 
 ---
 
-## Question 2: Docker networking and docker-compose
+## Question 2
 
-PgAdmin and Postgres are on the same Docker Compose network.
-
-Containers communicate using the **service name** and the **container port**.
+What is the rendered value of the variable file when the inputs taxi is set to green, year is set to 2020, and month is set to 04 during execution?
 
 **Answer:** `db:5432`
 
